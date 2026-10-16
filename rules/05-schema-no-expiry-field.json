@@ -1,0 +1,30 @@
+{
+  "id": "LIFE-SCHEMA-NO-EXPIRY-FIELD",
+  "title": "建表 / 模型定义里没有过期时间或软删标记字段",
+  "severity": "low",
+  "source": "《中华人民共和国个人信息保护法》第四十七条 —— 保存期限届满或处理目的不再必要的，应当主动删除个人信息（删除要能落到具体行上）；第五十一条 —— 采取相应的安全技术措施；《中华人民共和国数据安全法》第二十一条 —— 数据分类分级保护",
+  "advice": "表结构或模型里没有 `expires_at` / `deleted_at` / `ttl` 这类字段，意味着数据行上不带「什么时候该没了」的信息 —— 到期清理只能靠猜（按 created_at 加偏移），级联删除和审计也无从下手。弱信号，仅作提示：如果清理完全放在数据库分区、对象存储生命周期或外部归档系统里，这条可以忽略。若要把删除做成可执行、可追溯的动作，加上过期字段（并建索引）通常是最省事的第一步。",
+  "check": {
+    "type": "files-lack",
+    "pattern": "(deleted_at|deletedAt|is_deleted|isDeleted|deleted\\b|soft.?delete|\\bttl\\b|expires_at|expiresAt|expire_at|expireAt|expired_at|expiredAt|valid_until|validUntil|retention_until|有效期|失效时间|过期时间|删除时间|回收站)",
+    "flags": "i",
+    "paths": [
+      "**/*.sql",
+      "**/migrations/**",
+      "**/migration/**",
+      "**/models/**",
+      "**/model/**",
+      "**/entities/**",
+      "**/entity/**",
+      "**/schema*.prisma",
+      "**/schema*.rb",
+      "**/schema*.sql",
+      "**/schema*.js",
+      "**/schema*.ts",
+      "**/*.hbm.xml",
+      "**/dao/**"
+    ],
+    "when": "(CREATE\\s+TABLE|createTable|create_table|Schema::create|@Entity|Table\\(|model\\s+[A-Z]\\w*\\s*\\{)",
+    "evidence": "有建表 / 模型定义，但字段里没有过期时间或软删标记"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "LIFE-WRITE-NO-PURGE",
+  "title": "有数据写入路径，但整份代码里找不到任何过期清理 / 批量删除实现",
+  "severity": "high",
+  "source": "《中华人民共和国个人信息保护法》第四十七条 —— 处理目的已实现、无法实现或者为实现处理目的不再必要，或者保存期限已届满的，个人信息处理者应当主动删除个人信息；第十九条 —— 保存期限应当为实现处理目的所必要的最短时间；第五十一条 —— 应当制定内部管理制度和操作规程",
+  "advice": "代码里能看到的全是「写」：建表、INSERT、UPDATE、上传落盘，但没有一处「删」——没有过期清理、没有批量删除、没有 TTL 兜底。个保法第 47 条的删除义务是「主动」的：不该等用户来提，也不该等磁盘报警。建议补一条可被调度的清理路径（`purgeExpiredXxx()` / `DELETE FROM ... WHERE expires_at < now()` / 对象存储生命周期规则），并且让它在日志里留下清理条数，方便事后自查。",
+  "check": {
+    "type": "files-lack",
+    "pattern": "(purge|cleanup|clean_up|prune|deleteExpired|delete_expired|deleteOld|delete_old|removeExpired|remove_expired|removeOld|remove_old|dropOld|drop_old|archiveOld|archive_old|cleanOld|clean_old|expiredCleaner|\\bttl\\b|DELETE\\s+FROM[^;\\n]{0,80}(?:expired|expires_at|expire_at|created_at\\s*[<]|older)|定期清理|定时清理|自动清理|清理任务|清理策略|过期删除|到期删除|数据清理|定时删除|生命周期管理)",
+    "flags": "i",
+    "paths": [
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.cjs",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.jsx",
+      "**/*.vue",
+      "**/*.py",
+      "**/*.go",
+      "**/*.java",
+      "**/*.kt",
+      "**/*.rb",
+      "**/*.php",
+      "**/*.sql",
+      "**/*.yml",
+      "**/*.yaml",
+      "**/*.json",
+      "**/*.toml",
+      "**/*.ini",
+      "**/*.conf",
+      "**/*.sh",
+      "**/*.tf",
+      "**/*.md",
+      "**/Dockerfile"
+    ],
+    "when": "(INSERT\\s+INTO|insertOne|insertMany|\\.create\\(|\\.save\\(|upsert|writeFile|writeFileSync|appendFile|createWriteStream|multer|putObject|PutObjectCommand|uploadFile|\\.upload\\()",
+    "evidence": "有写入路径，但代码里找不到任何清理 / 过期删除实现"
+  }
+}

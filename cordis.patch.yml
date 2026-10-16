@@ -1,0 +1,4 @@
+# @deepwhale-cn/dsh-data-lifecycle 的组合层
+- insert:
+    - id: data-lifecycle
+      name: '@deepwhale-cn/dsh-data-lifecycle'

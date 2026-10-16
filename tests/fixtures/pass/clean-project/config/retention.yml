@@ -1,0 +1,12 @@
+# 留存期限配置（天）—— 按最短必要原则设定，改动需在 docs/data-retention.md 说明理由
+retentionDays:
+  members: 180
+  attachments: 90
+  auditLogs: 180
+  logs: 180
+
+# 清理任务
+purge:
+  schedule: "0 3 * * *"
+  batchSize: 500
+  dryRun: false

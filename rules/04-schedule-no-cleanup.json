@@ -1,0 +1,41 @@
+{
+  "id": "LIFE-SCHEDULE-NO-CLEANUP",
+  "title": "项目里有定时任务，但这些任务里没有一个是清理 / 过期删除",
+  "severity": "medium",
+  "source": "《中华人民共和国个人信息保护法》第四十七条 —— 保存期限届满的，个人信息处理者应当主动删除个人信息；第五十一条 —— 应当制定内部管理制度和操作规程，删除义务要有可执行的落地方式",
+  "advice": "项目里已经有调度设施（node-cron、crontab、Celery、@Scheduled、K8s CronJob、GitHub Actions 定时之类），说明「定时干活」这条路是通的 —— 但定时任务清单里没有清理类任务，报的都是报表、同步、备份。这通常意味着清理还没被排上日程。加一个每日/每周的清理任务即可（顺带把备份和保留期限对齐：备份里的数据同样受期限约束）。命中只是提示确认：如果清理做在部署层或数据库侧（如对象存储生命周期规则），请以那条路径为准。",
+  "check": {
+    "type": "files-lack",
+    "pattern": "(purge|cleanup|clean_up|prune|deleteExpired|delete_expired|deleteOld|delete_old|removeExpired|remove_expired|removeOld|remove_old|dropOld|drop_old|archiveOld|archive_old|cleanOld|clean_old|expiredCleaner|\\bttl\\b|DELETE\\s+FROM[^;\\n]{0,80}(?:expired|expires_at|expire_at|created_at\\s*[<]|older)|定期清理|定时清理|自动清理|清理任务|清理策略|过期删除|到期删除|数据清理|定时删除|生命周期管理)",
+    "flags": "i",
+    "paths": [
+      "**/cron/**",
+      "**/cron*.js",
+      "**/cron*.mjs",
+      "**/cron*.ts",
+      "**/cron*.py",
+      "**/cron*.sh",
+      "**/crontab*",
+      "**/*.cron",
+      "**/*.crontab",
+      "**/*.timer",
+      "**/jobs/**",
+      "**/job/**",
+      "**/tasks/**",
+      "**/task/**",
+      "**/schedules/**",
+      "**/scheduler/**",
+      "**/schedule*.js",
+      "**/schedule*.ts",
+      "**/schedule*.py",
+      "**/celery*.py",
+      "**/beat_schedule*",
+      "**/management/commands/**",
+      ".github/workflows/*.yml",
+      ".github/workflows/*.yaml",
+      "**/*.service"
+    ],
+    "when": "(node-cron|node-schedule|cron\\.schedule|new CronJob|crontab|cronjob|kind:\\s*CronJob|schedule\\.every|@Scheduled|celery|beat_schedule|APScheduler|BackgroundScheduler|quartz|Quartz|定时任务|定时执行|定时调度|scheduler)",
+    "evidence": "有定时任务，但任务清单里找不到清理 / 过期删除"
+  }
+}
