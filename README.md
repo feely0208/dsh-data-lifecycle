@@ -1,5 +1,7 @@
 # @deepwhale-cn/dsh-data-lifecycle
 
+[![dshfind 收录](https://dshfind.com/api/badge/feely0208/dsh-data-lifecycle?lang=zh)](https://dshfind.com/zh/plugins/feely0208/dsh-data-lifecycle)
+
 **数据不该永远躺着 —— 该删的，删了没。**
 
 **关键词**：数据留存 · 留存期限 · 过期清理 · 数据生命周期 · 该删没删 · 主动删除 · 最短必要 · 日志轮转 · 到期删除
