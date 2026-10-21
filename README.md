@@ -133,3 +133,7 @@ dsh-data-lifecycle --root /path/to/project --html report.html
 ## License
 
 MIT © 深鲸 DeepWhale
+
+---
+
+<p align="right"><a href="https://deepwhale.org.cn"><img src="https://www.deepwhale.org.cn/images/badge/deepwhale-badge.png" alt="powered by dwh" height="20"></a></p>
